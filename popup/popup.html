@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bias Buster</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="header">
+    <span class="logo">🎭</span>
+    <h1>Bias Buster</h1>
+  </div>
+
+  <div class="status-bar" id="statusBar">
+    <span id="statusText">Loading…</span>
+  </div>
+
+  <div class="toggle-row">
+    <span class="toggle-label">Obfuscation</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="toggleSwitch">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="section-label">Theme</div>
+  <div class="theme-grid" id="themeGrid"></div>
+
+  <button class="reveal-btn" id="revealBtn" disabled>👁 Hold to Reveal Original</button>
+
+  <div class="footer">
+    <a href="#" id="optionsLink">⚙ Settings</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

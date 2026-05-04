@@ -1,0 +1,46 @@
+{
+  "fantasy": {
+    "name": "Fantasy",
+    "emoji": "🧛",
+    "factions": ["Vampires", "Werewolves", "Wizards", "Druids"],
+    "personNames": {
+      "Vampires": ["Lord Malachar", "Lady Seraphina", "Count Dorian", "Baroness Valeria", "Prince Lucian", "Duchess Morwenna", "Sir Aldric", "Dame Isolde", "Archduke Ravenna", "Viscount Callum"],
+      "Werewolves": ["Alpha Gareth", "Huntress Rowena", "Scout Fenric", "Elder Sylvara", "Theron Bold", "Brigid Ironpaw", "Cormac Grayfang", "Elara Nighthowl", "Wulfric Fierce", "Serafina Swift"],
+      "Wizards": ["Archmage Merwyn", "Enchantress Vivienne", "Conjurer Caius", "Sorceress Nimue", "Elder Eldran", "Seer Thessaly", "Spellbinder Baelor", "Oracle Seren", "Sage Oryn", "Diviner Lysara"],
+      "Druids": ["Rider Draven", "Wingmaster Aelindra", "Commander Rykar", "Skyborn Kaelith", "Sorin Emberclaw", "Lyria Goldwing", "Zephyr Stormrider", "Talon Ashscale", "Varis Cindercrest", "Kira Ironwing"]
+    }
+  },
+  "scifi": {
+    "name": "Sci-Fi",
+    "emoji": "🚀",
+    "factions": ["Federation", "Empire", "Rebels", "Syndicate"],
+    "personNames": {
+      "Federation": ["Admiral Zara-7", "Commander Krix", "Ensign Lumina", "Captain Vex", "Director Aeon", "Specialist Prism", "Agent Nexus", "Officer Orion", "Pilot Lyra-9", "Analyst Crest"],
+      "Empire": ["Warlord Darkon", "General Vheld", "Colonel Malarix", "Marshal Shadex", "Admiral Vorn", "Commander Krait", "Enforcer Drek", "Overseer Skar", "Director Harkon", "Sentinel Varek"],
+      "Rebels": ["Captain Ash", "Scout Quinn", "Gunner Jax", "Pilot Riven", "Commander Blaze", "Specialist Nova", "Agent Kira", "Sniper Flynn", "Medic Echo", "Sergeant Storm"],
+      "Syndicate": ["Broker Cipher", "Operative Wraith", "Handler Ghost", "Contact Phantom", "Fixer Spectre", "Runner Rogue", "Cleaner Shadow", "Courier Echo", "Informant Flux", "Cutout Null"]
+    }
+  },
+  "food": {
+    "name": "Food",
+    "emoji": "🍕",
+    "factions": ["Pizzas", "Tacos", "Sushi", "Burgers"],
+    "personNames": {
+      "Pizzas": ["Chef Mario", "Chef Rosa", "Chef Tomasso", "Chef Lucia", "Chef Bruno", "Chef Aria", "Chef Napoli", "Chef Crust", "Chef Pepperoni", "Chef Mozzarella"],
+      "Tacos": ["Chef Carlos", "Chef Isabella", "Chef Diego", "Chef Carmen", "Chef Ramon", "Chef Sofia", "Chef Salsa", "Chef Cilantro", "Chef Tortilla", "Chef Jalapeño"],
+      "Sushi": ["Chef Hiro", "Chef Yuki", "Chef Kenji", "Chef Aiko", "Chef Ryu", "Chef Suki", "Chef Wasabi", "Chef Miso", "Chef Sashimi", "Chef Umami"],
+      "Burgers": ["Chef Duke", "Chef Patty", "Chef Bun", "Chef Grill", "Chef Chuck", "Chef Lettuce", "Chef Pickles", "Chef Cheddar", "Chef Mustard", "Chef Ketchup"]
+    }
+  },
+  "animals": {
+    "name": "Animals",
+    "emoji": "🦁",
+    "factions": ["Lions", "Eagles", "Wolves", "Bears"],
+    "personNames": {
+      "Lions": ["Leo the Bold", "Mane the Wise", "Simba the Fierce", "Nala the Swift", "Aslan the Great", "Sarabi the Elder", "Kion the Young", "Leona the Proud", "Rufus the Strong", "Amber the Cunning"],
+      "Eagles": ["Talon the Sharp", "Aria the High", "Swift the Keen", "Soar the Far", "Aerie the Wise", "Falcon the Fast", "Hawk the Bold", "Iris the Clear", "Crest the Proud", "Feather the Light"],
+      "Wolves": ["Fang the Hunter", "Luna the Howler", "Howl the Elder", "Shadow the Silent", "Storm the Fierce", "Blaze the Bold", "Ash the Gray", "Silver the Quick", "Timber the Strong", "Frost the Cold"],
+      "Bears": ["Bruno the Heavy", "Honey the Sweet", "Kodiak the Mighty", "Grizzly the Fierce", "Paddington the Wise", "Smokey the Old", "Cub the Young", "Ursa the Great", "Birch the Calm", "Ember the Warm"]
+    }
+  }
+}

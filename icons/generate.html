@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BiasBuster Icon Generator</title>
+<style>
+  body { font-family: system-ui, -apple-system, sans-serif; padding: 2rem; background: #f5f5f7; color: #222; }
+  h1 { margin: 0 0 .25rem; }
+  p.sub { margin: 0 0 2rem; color: #666; }
+  .preview { display: flex; gap: 2rem; align-items: end; margin: 2rem 0; flex-wrap: wrap; }
+  .tile { display: flex; flex-direction: column; align-items: center; gap: .5rem; }
+  .tile canvas { background: #fff; border: 1px solid #ddd; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .tile .pixel { image-rendering: pixelated; }
+  .tile .label { font-size: .85rem; color: #555; }
+  button { padding: .75rem 1.5rem; font-size: 1rem; background: #6366f1; color: #fff; border: 0; border-radius: 6px; cursor: pointer; }
+  button:hover { background: #4f46e5; }
+  .instructions { margin-top: 2rem; background: #fff; padding: 1rem 1.25rem; border-radius: 6px; max-width: 640px; line-height: 1.55; border: 1px solid #e5e5e5; }
+  code { background: #f0f0f3; padding: 1px 5px; border-radius: 3px; font-size: .9em; }
+</style>
+</head>
+<body>
+<h1>BiasBuster Icon Preview</h1>
+<p class="sub">Drawn on &lt;canvas&gt; — no dependencies. Previews are shown at 1× and 4× so you can judge clarity at small sizes.</p>
+
+<h3>1× preview (true pixel size)</h3>
+<div class="preview" id="preview1x"></div>
+
+<h3>4× preview (zoomed for inspection)</h3>
+<div class="preview" id="preview4x"></div>
+
+<button onclick="downloadAll()">Download all 4 PNGs</button>
+
+<div class="instructions">
+  <strong>Install steps:</strong>
+  <ol>
+    <li>Click <em>Download all 4 PNGs</em> — your browser saves <code>icon16.png</code>, <code>icon32.png</code>, <code>icon48.png</code>, <code>icon128.png</code> to your Downloads folder.</li>
+    <li>Move all four files into <code>C:\src\BiasBuster\icons\</code>.</li>
+    <li>Open <code>chrome://extensions</code> and click <strong>Reload</strong> on the Bias Buster card.</li>
+  </ol>
+</div>
+
+<script>
+const SIZES = [16, 32, 48, 128];
+
+function drawIcon(canvas, size) {
+  const ctx = canvas.getContext('2d');
+  canvas.width = size;
+  canvas.height = size;
+
+  // Rounded gradient background
+  const grad = ctx.createLinearGradient(0, 0, size, size);
+  grad.addColorStop(0, '#6366f1');
+  grad.addColorStop(1, '#8b5cf6');
+  ctx.fillStyle = grad;
+  const r = size * 0.18;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, size, size, r);
+  ctx.fill();
+
+  // White silhouette: head + shoulders
+  ctx.fillStyle = 'rgba(255,255,255,0.95)';
+  // shoulders (semi-circle clipped at bottom)
+  ctx.beginPath();
+  ctx.arc(size / 2, size * 0.95, size * 0.41, Math.PI, 0);
+  ctx.fill();
+  // head
+  const headCY = size * 0.36;
+  const headR  = size * 0.157;
+  ctx.beginPath();
+  ctx.arc(size / 2, headCY, headR, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Black redaction bar across the eyes
+  ctx.fillStyle = '#111';
+  const barH = Math.max(2, Math.round(size * 0.10));
+  const barW = Math.round(size * 0.55);
+  const barX = Math.round((size - barW) / 2);
+  const barY = Math.round(headCY - barH / 2);
+  ctx.fillRect(barX, barY, barW, barH);
+}
+
+function buildTile(parent, size, scale, pixelated) {
+  const tile = document.createElement('div');
+  tile.className = 'tile';
+  const c = document.createElement('canvas');
+  c.id = 'c-' + scale + 'x-' + size;
+  c.style.width  = (size * scale) + 'px';
+  c.style.height = (size * scale) + 'px';
+  if (pixelated) c.classList.add('pixel');
+  const lbl = document.createElement('div');
+  lbl.className = 'label';
+  lbl.textContent = size + ' × ' + size;
+  tile.append(c, lbl);
+  parent.appendChild(tile);
+  drawIcon(c, size);
+}
+
+function render() {
+  const p1 = document.getElementById('preview1x');
+  const p4 = document.getElementById('preview4x');
+  p1.innerHTML = '';
+  p4.innerHTML = '';
+  SIZES.forEach(s => {
+    buildTile(p1, s, 1, false);
+    buildTile(p4, s, 4, true);
+  });
+}
+
+function downloadAll() {
+  SIZES.forEach(size => {
+    const c = document.getElementById('c-1x-' + size);
+    c.toBlob(blob => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'icon' + size + '.png';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+    }, 'image/png');
+  });
+}
+
+render();
+</script>
+</body>
+</html>

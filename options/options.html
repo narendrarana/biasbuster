@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bias Buster — Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎭 Bias Buster Settings</h1>
+    </header>
+
+    <section>
+      <h2>AI Provider</h2>
+      <div class="field">
+        <label for="providerSelect">Entity Extraction Provider</label>
+        <select id="providerSelect">
+          <option value="gazetteer">Local Database (No API Key) — recommended</option>
+          <option value="openai">GPT-4o Mini (OpenAI)</option>
+          <option value="claude">Claude Haiku (Anthropic)</option>
+          <option value="mock">Mock (hardcoded 9 entities — dev only)</option>
+        </select>
+        <p class="hint">Local Database matches article text against a built-in list of 100+ political figures — no API key, no network call, works offline.</p>
+      </div>
+
+      <div class="field" id="openaiKeyField" style="display:none">
+        <label for="openaiKey">OpenAI API Key</label>
+        <input type="password" id="openaiKey" placeholder="sk-…" autocomplete="off" spellcheck="false">
+        <p class="hint">Stored locally in Chrome — never sent anywhere except OpenAI.</p>
+      </div>
+
+      <div class="field" id="claudeKeyField" style="display:none">
+        <label for="claudeKey">Anthropic API Key</label>
+        <input type="password" id="claudeKey" placeholder="sk-ant-…" autocomplete="off" spellcheck="false">
+        <p class="hint">Stored locally in Chrome — never sent anywhere except Anthropic.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Default Theme</h2>
+      <div class="field">
+        <label for="themeSelect">Theme applied on page load</label>
+        <select id="themeSelect">
+          <option value="fantasy">🧛 Fantasy</option>
+          <option value="scifi">🚀 Sci-Fi</option>
+          <option value="food">🍕 Food</option>
+          <option value="animals">🦁 Animals</option>
+        </select>
+      </div>
+    </section>
+
+    <section>
+      <h2>Excluded Domains</h2>
+      <div class="field">
+        <label for="excludedDomains">Never activate on these domains (one per line)</label>
+        <textarea id="excludedDomains" rows="4" placeholder="example.com&#10;another-site.com"></textarea>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button id="saveBtn" class="btn-primary">Save Settings</button>
+      <span id="saveStatus" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

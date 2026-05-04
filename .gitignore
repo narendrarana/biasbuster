@@ -1,0 +1,32 @@
+# Local Claude Code settings (machine-specific paths)
+.claude/settings.local.json
+
+# Raw screenshot sources — only the processed 1280×800 PNGs are tracked
+/SampleImage.png
+screenshots/SampleImage.png
+screenshots/Popup.png
+screenshots/settings.png
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+
+# Editors
+.vscode/
+.idea/
+
+# Node (in case anyone adds tooling later)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Build output (none today, but reserve)
+dist/
+build/
+
+# Local secrets (just in case)
+.env
+.env.*
+*.local
