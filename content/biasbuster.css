@@ -1,0 +1,12 @@
+.bb-swap {
+  --bb-accent: #555;
+  background-color: color-mix(in srgb, var(--bb-accent) 16%, transparent);
+  border-bottom: 2px solid var(--bb-accent);
+  border-radius: 2px;
+  padding: 0 1px;
+  cursor: help;
+  transition: background-color .12s ease;
+}
+.bb-swap:hover {
+  background-color: color-mix(in srgb, var(--bb-accent) 34%, transparent);
+}
