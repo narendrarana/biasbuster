@@ -26,6 +26,9 @@ yarn-error.log*
 dist/
 build/
 
+# Chrome Web Store package zips (built locally via package.ps1)
+*.zip
+
 # Local secrets (just in case)
 .env
 .env.*
