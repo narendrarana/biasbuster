@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Bias Buster",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Read the news without political identity bias — entities replaced with fun themed pseudonyms.",
   "permissions": ["storage", "activeTab", "tabs"],
   "icons": {
@@ -227,6 +227,7 @@
         "https://*.wsj.com/*"
       ],
       "js": ["content/content-script.js"],
+      "css": ["content/biasbuster.css"],
       "run_at": "document_idle"
     }
   ],

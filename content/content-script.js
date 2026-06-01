@@ -6,10 +6,16 @@
   let currentTheme = 'fantasy';
   let entityMap = null;
   let themes = null;
-  let replacementEntries = []; // [{alias, pseudonym}] sorted longest-first
-  const modifiedNodes = [];
-  const nodeData = new WeakMap();
+  let replacementEntries = []; // [{alias, pseudonym, faction}] sorted longest-first
+  const modifiedNodes = []; // [{ original, nodes[] }] for toggle-off restoration
   let entityCount = 0;
+
+  // Combined matcher rebuilt whenever replacementEntries changes
+  let combinedRegex = null;
+  let aliasLookup = null; // lowercased alias -> { pseudonym, faction }
+
+  const FACTION_PALETTE = ['#c0392b', '#2980b9', '#27ae60', '#8e44ad',
+                           '#d35400', '#16a085', '#34495e', '#c2185b'];
 
   // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -23,6 +29,10 @@
 
   function escapeRegex(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function factionColor(faction) {
+    return FACTION_PALETTE[simpleHash(faction || '') % FACTION_PALETTE.length];
   }
 
   function matchCase(original, replacement) {
@@ -156,62 +166,107 @@
       const allAliases = [entity.canonical, ...(entity.aliases || [])];
       for (const alias of allAliases) {
         if (alias && alias.trim() && !seen.has(alias)) {
-          seen.set(alias, pseudo.pseudonym);
+          seen.set(alias, { pseudonym: pseudo.pseudonym, faction: pseudo.faction });
         }
       }
     }
     return [...seen.entries()]
       .sort((a, b) => b[0].length - a[0].length)
-      .map(([alias, pseudonym]) => ({ alias, pseudonym }));
+      .map(([alias, info]) => ({ alias, ...info }));
   }
 
   // ── DOM Manipulation ───────────────────────────────────────────────────────
 
-  function replaceText(text, entries) {
-    let result = text;
-    for (const { alias, pseudonym } of entries) {
-      const re = new RegExp(`\\b${escapeRegex(alias)}\\b`, 'gi');
-      result = result.replace(re, match => matchCase(match, pseudonym));
+  function buildMatcher(entries) {
+    combinedRegex = null;
+    aliasLookup = null;
+    if (entries.length === 0) return;
+    aliasLookup = new Map();
+    const parts = entries.map(e => {
+      aliasLookup.set(e.alias.toLowerCase(), e);
+      return escapeRegex(e.alias);
+    });
+    // entries are sorted longest-first, so alternation prefers the longest alias
+    combinedRegex = new RegExp(`\\b(${parts.join('|')})\\b`, 'gi');
+  }
+
+  // Replace a text node with [text, <span.bb-swap>, text, …]. Each swapped span
+  // carries the original name (title + data attr) and a faction accent color.
+  function obfuscateNode(node) {
+    const text = node.textContent;
+    combinedRegex.lastIndex = 0;
+    const frag = document.createDocumentFragment();
+    const inserted = [];
+    let lastIndex = 0, match;
+
+    while ((match = combinedRegex.exec(text)) !== null) {
+      const matched = match[0];
+      const entry = aliasLookup.get(matched.toLowerCase());
+      if (!entry) continue;
+      if (match.index > lastIndex) {
+        const t = document.createTextNode(text.slice(lastIndex, match.index));
+        frag.appendChild(t); inserted.push(t);
+      }
+      const span = document.createElement('span');
+      span.className = 'bb-swap';
+      span.textContent = matchCase(matched, entry.pseudonym);
+      span.title = matched;               // original revealed on hover
+      span.dataset.bbOriginal = matched;
+      if (entry.faction) span.style.setProperty('--bb-accent', factionColor(entry.faction));
+      frag.appendChild(span); inserted.push(span);
+      lastIndex = match.index + matched.length;
     }
-    return result;
+
+    if (inserted.length === 0) return;    // nothing matched in this node
+    if (lastIndex < text.length) {
+      const t = document.createTextNode(text.slice(lastIndex));
+      frag.appendChild(t); inserted.push(t);
+    }
+    const parent = node.parentNode;
+    if (!parent) return;
+    parent.replaceChild(frag, node);
+    modifiedNodes.push({ original: text, nodes: inserted });
   }
 
   function applyObfuscation() {
     modifiedNodes.length = 0;
+    buildMatcher(replacementEntries);
+    entityCount = entityMap?.entities?.length || 0;
+    if (!combinedRegex) return;
 
     const walker = document.createTreeWalker(
       document.body,
       NodeFilter.SHOW_TEXT,
       {
         acceptNode(node) {
-          const tag = node.parentElement?.tagName;
+          const parent = node.parentElement;
+          const tag = parent?.tagName;
           if (!tag || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT' || tag === 'TEXTAREA') {
             return NodeFilter.FILTER_REJECT;
           }
+          if (parent.classList.contains('bb-swap')) return NodeFilter.FILTER_REJECT;
           return NodeFilter.FILTER_ACCEPT;
         }
       }
     );
 
+    // Collect all target nodes before mutating — replacing nodes mid-walk
+    // would invalidate the TreeWalker.
+    const targets = [];
     let node;
-    while ((node = walker.nextNode())) {
-      const original = node.textContent;
-      const replaced = replaceText(original, replacementEntries);
-      if (replaced !== original) {
-        nodeData.set(node, { original, replaced });
-        node.textContent = replaced;
-        modifiedNodes.push(node);
-      }
-    }
-
-    entityCount = entityMap?.entities?.length || 0;
+    while ((node = walker.nextNode())) targets.push(node);
+    for (const n of targets) obfuscateNode(n);
   }
 
   function removeObfuscation() {
-    for (const node of modifiedNodes) {
-      const data = nodeData.get(node);
-      if (data) node.textContent = data.original;
+    for (const rec of modifiedNodes) {
+      const first = rec.nodes[0];
+      const parent = first?.parentNode;
+      if (!parent) continue;
+      parent.insertBefore(document.createTextNode(rec.original), first);
+      for (const n of rec.nodes) n.remove();
     }
+    modifiedNodes.length = 0;
   }
 
   // ── Theme Application ──────────────────────────────────────────────────────
